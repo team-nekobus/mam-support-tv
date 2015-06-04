@@ -10,6 +10,8 @@
   },
   "type": "privileged",
   "permissions": {
+    "pana-plugin":{},
+    "pana-server-url":{},
     "tv": {},
     "browser":{},
     "webapps-manage":{},
