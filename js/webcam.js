@@ -23,7 +23,6 @@ window.addEventListener('load', function() {
 			hide(this.hideViewElement);
 			show(this.camViewElement);
 			this.iframe.src = 'http://' + this.server + ':' + PORT;
-			this.iframe.focus();
 			this.opened = true;
 		},
 		close: function () {
@@ -31,13 +30,23 @@ window.addEventListener('load', function() {
 			hide(this.camViewElement);
 			var iframe = this.camViewElement.querySelector('iframe');
 			this.iframe.src = '';
-			//this.hideViewElement.focus();
-			window.focus();
-			//document.body.focus();
 			this.opened = false;
 		},
 		isOpened: function() {
 			return this.opened;
+		},
+		postMessage: function(message) {
+			if (this.isOpened()) {
+				this.iframe.contentWindow.postMessage(message, '*');
+			}
+		},
+		postKeyEvent: function(evt) {
+			const COPY_KEYS = [ 'keyCode' ];
+			var message = {};
+			COPY_KEYS.forEach(function(key) {
+				message[key] = evt[key];
+			});
+			this.postMessage(message);
 		}
 	}
 	window.WebCamView = WebCamView;

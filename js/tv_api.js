@@ -1,6 +1,6 @@
 'use strict';
 
-const SERVER_ADDRESS = '192.168.110.18';
+const SERVER_ADDRESS = '127.0.0.1';
 var gVideo;
 var gChBanner;
 
@@ -11,21 +11,11 @@ var gIsNotificationVisible = false;
 
 window.onload = function() {
   window.addEventListener('keydown', KeyDownFunc);
-  window.addEventListener('message', onMessage);
 
   gVideo = document.getElementById('tv');
   gChBanner = document.getElementById('channel-banner');
-//var winObj = getFocusedWindow();
-//console.log(winObj.getId());
 
   WebCamView.init(SERVER_ADDRESS, 'webcam-view', 'tv-view');
-  // WS.start(SERVER_ADDRESS);
-  WS.onMessage = function (data) {
-    changeNotificationText(data['message']);
-    gIsNotificationVisible = true;
-    setNotificationVisible();
-    console.dir(data);
-  }
 
   var tv = window.navigator.tv;
   if (!tv) {
@@ -98,6 +88,9 @@ function setChannel(channel) {
 
 function KeyDownFunc(event) { 
   var key = event.keyCode;
+  console.log('KeyDownFunc ' + key);
+
+  WebCamView.postKeyEvent(event);
 
   var gChannelList_index = -1;
  
@@ -141,6 +134,9 @@ function KeyDownFunc(event) {
   case KeyEvent.DOM_VK_BLUE:
     break;
   case KeyEvent.DOM_VK_RED:
+    if (WebCamView.isOpened()) {
+      WebCamView.close();
+    }
     break;
   case KeyEvent.DOM_VK_GREEN:
     WebCamView.open();
@@ -173,16 +169,6 @@ function KeyDownFunc(event) {
   TvTuning(currentChannel);
   //resetBanner ();    
   setChannel(currentChannel);
-}
-
-function onMessage(event) {
-  var command = event.data;
-  if (command === 'close') {
-    if (WebCamView.isOpened()) {
-      WebCamView.close();
-      window.focus();
-    }
-  }
 }
 
 function setNotificationVisible(){
