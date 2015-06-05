@@ -17,7 +17,8 @@
     var digitalOut = data.digital;
     var analogOut = data.analog;
 
-    console.log(digitalOut);
+    console.log('Digital: ' + digitalOut);
+    console.log('Analog: ' + analogOut);
     if (motionValue != digitalOut[DIGITAL_MOTION]) {
     	motionValue = digitalOut[DIGITAL_MOTION];
     	motionDetectionHandler(motionValue);

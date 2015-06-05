@@ -1,6 +1,6 @@
 'use strict';
 
-const SERVER_ADDRESS = '127.0.0.1';
+const SERVER_ADDRESS = '192.168.1.200';
 var gVideo;
 var gChBanner;
 
@@ -132,16 +132,20 @@ function KeyDownFunc(event) {
     gChannelList_index = 11;
     break;
   case KeyEvent.DOM_VK_BLUE:
+  case KeyEvent.DOM_VK_B: // for debugging in simulator
     break;
   case KeyEvent.DOM_VK_RED:
+  case KeyEvent.DOM_VK_R: // for debugging in simulator
     if (WebCamView.isOpened()) {
       WebCamView.close();
     }
     break;
   case KeyEvent.DOM_VK_GREEN:
+  case KeyEvent.DOM_VK_G: // for debugging in simulator
     WebCamView.open();
     break;
   case KeyEvent.DOM_VK_YELLOW:
+  case KeyEvent.DOM_VK_Y: // for debugging in simulator
     gIsNotificationVisible = !gIsNotificationVisible;
     setNotificationVisible();      
     break;
