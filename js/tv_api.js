@@ -151,6 +151,10 @@ function KeyDownFunc(event) {
     if (MoistureView.isOpened()) {
       MoistureView.close();
     }
+    if (gIsNotificationVisible) {
+      gIsNotificationVisible = false;
+      setNotificationVisible();      
+    }
     break;
   case KeyEvent.DOM_VK_GREEN:
   case KeyEvent.DOM_VK_G: // for debugging in simulator
