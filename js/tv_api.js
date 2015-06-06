@@ -8,6 +8,8 @@ var gChannelList = [];
 var gCurrentSource = null;
 
 var gIsNotificationVisible = false;
+var gNotificationTimeout = 7500;
+var gNotificationTimer;
 
 window.onload = function() {
   window.addEventListener('keydown', KeyDownFunc);
@@ -150,14 +152,18 @@ function KeyDownFunc(event) {
     setNotificationVisible();      
     break;
   case KeyEvent.DOM_VK_LEFT:
-    //changeNotificationText('左');
+    changeNotificationImage("notification_come.png")
+    gIsNotificationVisible = true;
+    setNotificationVisible();      
     break;
   case KeyEvent.DOM_VK_RIGHT:
-    //changeNotificationText('右');
+    changeNotificationImage("notification_rain.png")
+    gIsNotificationVisible = true;
+    setNotificationVisible();      
     break;
   case KeyEvent.DOM_VK_UP:
-    //gIsNotificationVisible = !gIsNotificationVisible;
-    //setNotificationVisible();      
+    gIsNotificationVisible = !gIsNotificationVisible;
+    setNotificationVisible();      
     break;
   case KeyEvent.DOM_VK_DOWN:
     break;
@@ -175,16 +181,26 @@ function KeyDownFunc(event) {
   setChannel(currentChannel);
 }
 
-function setNotificationVisible(){
+function setNotificationVisible() {
   var notificationDiv = document.getElementById('notification');
-  if(gIsNotificationVisible){
+  clearInterval(gNotificationTimer);
+  if (gIsNotificationVisible) {
     notificationDiv.style.visibility = 'visible';
-  }else{
+    gNotificationTimer = setTimeout(function(){
+      gIsNotificationVisible = false;
+      setNotificationVisible();
+    }, gNotificationTimeout);
+  } else {
     notificationDiv.style.visibility = 'hidden';
   }
 }
 
-function changeNotificationText(text){
+function changeNotificationImage(imageName) {
+  var notificationDiv = document.getElementById('notification');
+  notificationDiv.style.backgroundImage = "url(/image/" + imageName + ")";  
+}
+
+function changeNotificationText(text) {
   var notificationDiv = document.getElementById('notification');
   notificationDiv.textContent = text;  
 }
