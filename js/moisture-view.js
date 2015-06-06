@@ -12,6 +12,8 @@ window.addEventListener('load', function() {
 
 	function initGauge(canvas) {
 	  // http://bernii.github.io/gauge.js/
+	  canvas.width  = 900;
+	  canvas.height = 450;
 	  var opts = {
 	    lines: 12, // The number of lines to draw
 	    angle: 0.15, // The length of each line
@@ -22,8 +24,8 @@ window.addEventListener('load', function() {
 	      color: '#000000' // Fill color
 	    },
 	    limitMax: 'false',   // If true, the pointer will not go past the end of the gauge
-	    colorStart: '#ffff00',   // Colors
-	    colorStop: '#f0f000',    // just experiment with them
+	    colorStart: '#33ccff',   // Colors
+	    colorStop: '#66ffff',    // just experiment with them
 	    strokeColor: '#f8f8f8',   // to see which ones work best for you
 	    generateGradient: true
 	  };
