@@ -70,6 +70,10 @@ window.addEventListener('load', function() {
 		close: function () {
 			show(this.hideViewElement);
 			hide(this.gaugeViewElement);
+			if (this.intervalID) {
+				clearInterval(this.intervalID);
+			}
+			this.intervalID = null;
 			this.opened = false;
 		},
 		isOpened: function() {
