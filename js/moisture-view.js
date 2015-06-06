@@ -57,8 +57,7 @@ window.addEventListener('load', function() {
 		},
 		open: function () {
 			console.log("opening moisture view");
-			hide(this.hideViewElement);
-			show(this.gaugeViewElement);
+			this.gaugeViewElement.style.visibility = "visible";
 			this.opened = true;
 			var self = this;
 			this.intervalID = setInterval(function() {
@@ -68,8 +67,7 @@ window.addEventListener('load', function() {
 			}, MOISTURE_INTERVAL);
 		},
 		close: function () {
-			show(this.hideViewElement);
-			hide(this.gaugeViewElement);
+			this.gaugeViewElement.style.visibility = "hidden";
 			if (this.intervalID) {
 				clearInterval(this.intervalID);
 			}

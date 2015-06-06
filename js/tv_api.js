@@ -23,6 +23,23 @@ window.onload = function() {
   WebCamView.init(SERVER_ADDRESS, 'webcam-view', 'tv-view');
   MoistureView.init('moisture-view', 'tv-view', getMoisturePercentage);
 
+  SensorMonitor.setDetectionHandler('motion', function (value) {
+    if (value) {
+      changeNotificationImage("notification_come.png")
+      gIsNotificationVisible = true;
+      setNotificationVisible();      
+    } else {
+    }
+  });
+  SensorMonitor.setDetectionHandler('water', function (value) {
+    if (value) {
+      changeNotificationImage("notification_rain.png")
+      gIsNotificationVisible = true;
+      setNotificationVisible();      
+    } else {
+    }
+  });
+
   var tv = window.navigator.tv;
   if (!tv) {
     errlog ('failed to get tv. check permission.');
@@ -168,18 +185,10 @@ function KeyDownFunc(event) {
     setNotificationVisible();      
     break;
   case KeyEvent.DOM_VK_LEFT:
-    changeNotificationImage("notification_come.png")
-    gIsNotificationVisible = true;
-    setNotificationVisible();      
     break;
   case KeyEvent.DOM_VK_RIGHT:
-    changeNotificationImage("notification_rain.png")
-    gIsNotificationVisible = true;
-    setNotificationVisible();      
     break;
   case KeyEvent.DOM_VK_UP:
-    gIsNotificationVisible = !gIsNotificationVisible;
-    setNotificationVisible();      
     break;
   case KeyEvent.DOM_VK_DOWN:
     break;

@@ -76,10 +76,28 @@ html, body {
 }
 
 .moisture-view {
-  background-color: white;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 3000;
   height: 100%;
+  visibility: hidden;
 }
 
 .moisture-view canvas {
-  background-color: white;
+  position: absolute;
+  bottom: 40px;
+  background-color: rgba(0, 0, 0, 0);
+  z-index: 3100;
+}
+
+.moisture-view img{
+  position:absolute;
+  bottom: 40px;
+  margin-left: 750px;
+  margin-top: 50px;
+  z-index: 3101;
+}
+
+#webcam-view{
+  overflow: hidden;
 }
