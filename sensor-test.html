@@ -12,12 +12,19 @@
         <script src="js/socket-serial.js"></script>
         <script src="js/twelite-serial.js"></script>
         <script src="js/sensor-monitor.js"></script>
+        <script src="js/gauge.min.js"></script>
+        <script src="js/moisture-view.js"></script>
         <script src="js/sensor-test.js"></script>
     </head>
     <body>
-        <h1>センサーテスト</h1>
-        <h1>Moisture: <span id="notify-moisture"></span></h1>
-        <div id="notify-motion" style="visibility: hidden"><h1>Motion!</h1></div>
-        <div id="notify-water" style="visibility: hidden"><h1>Water!</h1></div>
+        <section id="tv-view">
+            <h1>センサーテスト</h1>
+            <h1>Moisture: <span id="notify-moisture"></span>%</h1>
+            <div id="notify-motion" style="visibility: hidden"><h1>Motion!</h1></div>
+            <div id="notify-water" style="visibility: hidden"><h1>Water!</h1></div>
+        </section> 
+        <section id="moisture-view" style="display:none; background-color: white;">
+            <canvas></canvas>
+        </section> 
     </body>
 </html>

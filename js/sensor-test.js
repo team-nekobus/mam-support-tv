@@ -1,5 +1,6 @@
 (function() {
 	'use strict';
+	var MAX_MOISTURE_VALUE = 1300;
 
 	window.addEventListener('load', function() {
 		var motion = document.getElementById('notify-motion');
@@ -19,15 +20,36 @@
 				water.style.visibility = 'hidden';
 			}
 		});
+
+  	window.addEventListener('keydown', function(evt) {
+  		switch (evt.keyCode) {
+			  case KeyEvent.DOM_VK_BLUE:
+				case KeyEvent.DOM_VK_B:
+		  		MoistureView.open();
+					break;
+				case KeyEvent.DOM_VK_R:
+		  		MoistureView.close();
+					break;
+  		}
+  	});
+		
+		SensorMonitor.init();
+  	MoistureView.init('moisture-view', 'tv-view', getMoisturePercentage);
+
 		setInterval(function () {
+			moisture.textContent = (Math.floor(getMoisturePercentage() * 100) / 100);
+		}, 1000);
+
+		function getMoisturePercentage() {
 			var value = SensorMonitor.getValue('moisture');	
 			if (value === -1) {
-				moisture.textContent = '???';
-			} else {
-				moisture.textContent = value;
+				return 0;
 			}
-		});
-		SensorMonitor.init();
+			if (value > MAX_MOISTURE_VALUE) {
+				MAX_MOISTURE_VALUE = value;
+			}
+			return value * (100 / MAX_MOISTURE_VALUE);
+		}
 	});
 
 })();

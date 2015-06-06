@@ -1,6 +1,8 @@
 'use strict';
 
 const SERVER_ADDRESS = '192.168.1.200';
+var MAX_MOISTURE_VALUE = 1300;
+
 var gVideo;
 var gChBanner;
 
@@ -17,7 +19,9 @@ window.onload = function() {
   gVideo = document.getElementById('tv');
   gChBanner = document.getElementById('channel-banner');
 
+  SensorMonitor.init();
   WebCamView.init(SERVER_ADDRESS, 'webcam-view', 'tv-view');
+  MoistureView.init('moisture-view', 'tv-view', getMoisturePercentage);
 
   var tv = window.navigator.tv;
   if (!tv) {
@@ -135,16 +139,24 @@ function KeyDownFunc(event) {
     break;
   case KeyEvent.DOM_VK_BLUE:
   case KeyEvent.DOM_VK_B: // for debugging in simulator
+    if (!MoistureView.isOpened()) {
+      MoistureView.open();
+    }
     break;
   case KeyEvent.DOM_VK_RED:
   case KeyEvent.DOM_VK_R: // for debugging in simulator
     if (WebCamView.isOpened()) {
       WebCamView.close();
     }
+    if (MoistureView.isOpened()) {
+      MoistureView.close();
+    }
     break;
   case KeyEvent.DOM_VK_GREEN:
   case KeyEvent.DOM_VK_G: // for debugging in simulator
-    WebCamView.open();
+    if (!WebCamView.isOpened()) {
+      WebCamView.open();
+    }
     break;
   case KeyEvent.DOM_VK_YELLOW:
   case KeyEvent.DOM_VK_Y: // for debugging in simulator
@@ -203,4 +215,15 @@ function changeNotificationImage(imageName) {
 function changeNotificationText(text) {
   var notificationDiv = document.getElementById('notification');
   notificationDiv.textContent = text;  
+}
+
+function getMoisturePercentage() {
+  var value = SensorMonitor.getValue('moisture');
+  if (value === -1) {
+    return 0;
+  }
+  if (value > MAX_MOISTURE_VALUE) {
+    MAX_MOISTURE_VALUE = value;
+  }
+  return value * (100 / MAX_MOISTURE_VALUE);
 }

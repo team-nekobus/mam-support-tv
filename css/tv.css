@@ -74,3 +74,12 @@ html, body {
   bottom: 20px;
   right: 20px;
 }
+
+.moisture-view {
+  background-color: white;
+  height: 100%;
+}
+
+.moisture-view canvas {
+  background-color: white;
+}
