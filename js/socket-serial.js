@@ -2,6 +2,7 @@
   'use strict';
   const ADDRESS = '127.0.0.1';
   const PORT = 9943;
+
   var gSerialConfig = {
     devicename: 'ttyUSB0',
     bitrate: 9600
@@ -10,14 +11,19 @@
   var SocketSerial = {
     _socket: undefined,
     _buffer: '',
+    _isOpened: false,
     _onopen: function () {},
     _ondata: function () {},
     _onerror: function () {},
 
-  	open: function(server) {
-      var addr = ADDRESS;
-      var port = PORT;
+    open: function(server) {
+      // try to connect to the local server first
+      this.openServer(ADDRESS, PORT);
+
+      // fallback to remote
       if (server) {
+        var addr = ADDRESS;
+        var port = PORT;
         var colonIndex = server.indexOf(':');
         if (colonIndex < 0) {
           addr = server;
@@ -25,17 +31,29 @@
           addr = server.slice(0, colonIndex);
           port = server.slice(colonIndex+1);
         }
-      }
+        var self = this;
+        setTimeout(function () {
+          if (!self._isOpened) {
+            self.openServer(addr, port);
+          }
+        }, 3000);
+      } 
+    },
+  	openServer: function(addr, port) {
       var socket = navigator.mozTCPSocket.open(addr, port);
-      this._server = addr + ':' + port;
       this._socket = socket;
+      this._server = addr + ':' + port;
+
+      console.log('connecting to', this._server);
+
       var self = this;
       socket.onopen = function () {
         console.log('Opened');
+        self._isOpened = true;
+        self._onopen();
         if (!window.navigator.tv) {
           socket.send(JSON.stringify(gSerialConfig));
         }
-        self._onopen();
       }
       socket.ondata = function (evt) {
         if (typeof evt.data === 'string') {
@@ -78,6 +96,7 @@
       }
       this._socket = undefined;
       this._buffer = '';
+      this._isOpened = false;
     }
   };
 
