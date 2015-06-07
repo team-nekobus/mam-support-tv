@@ -34,16 +34,6 @@ window.addEventListener('load', function() {
 	  return gauge;
 	}
 
-	function getMoisturePercentage() {
-		if (value === -1) {
-			return 0;
-		}
-		if (value > MAX_MOISTURE_VALUE) {
-			MAX_MOISTURE_VALUE = value;
-		}
-		return value * (100 / MAX_MOISTURE_VALUE);
-	}
-
 	var MoistureView = {
 		init: function (targetView, hideView, getMoistureValue) {
 			this.gaugeViewElement = document.getElementById(targetView);
