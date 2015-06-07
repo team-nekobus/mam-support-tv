@@ -14,8 +14,20 @@
     _ondata: function () {},
     _onerror: function () {},
 
-  	open: function() {
-      var socket = navigator.mozTCPSocket.open(ADDRESS, PORT);
+  	open: function(server) {
+      var addr = ADDRESS;
+      var port = PORT;
+      if (server) {
+        var colonIndex = server.indexOf(':');
+        if (colonIndex < 0) {
+          addr = server;
+        } else {
+          addr = server.slice(0, colonIndex);
+          port = server.slice(colonIndex+1);
+        }
+      }
+      var socket = navigator.mozTCPSocket.open(addr, port);
+      this._server = addr + ':' + port;
       this._socket = socket;
       var self = this;
       socket.onopen = function () {
@@ -44,7 +56,7 @@
         }
       }
       socket.onerror = function (evt) {
-        console.error('Error:' + evt.type);
+        console.error('Error:', evt.data.name, evt.data.message, 'server=' + self._server);
         self._onerror(evt);
       }
     },
@@ -59,6 +71,13 @@
     },
     setErrorHandler: function(onerror) {
       this._onerror = onerror;
+    },
+    close: function() {
+      if (this._socket) {
+        this._socket.close();
+      }
+      this._socket = undefined;
+      this._buffer = '';
     }
   };
 

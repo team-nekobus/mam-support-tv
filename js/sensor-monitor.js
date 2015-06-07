@@ -32,9 +32,13 @@
 
 	var SensorMonitor = {};
 
-	SensorMonitor.init = function () {
+	SensorMonitor.init = function (server) {
 		SocketSerial.setDataHandler(ondata);
-		SocketSerial.open();
+		SocketSerial.open(server);
+	}
+
+	SensorMonitor.finish = function (server) {
+		SocketSerial.close();
 	}
 
 	SensorMonitor.setDetectionHandler = function (type, handler) {

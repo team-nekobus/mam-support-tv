@@ -1,6 +1,6 @@
 'use strict';
 
-const SERVER_ADDRESS = '192.168.1.200';
+const KEY_SERVER_ADDRESS = '__server_address';
 var MAX_MOISTURE_VALUE = 1300;
 
 var gVideo;
@@ -19,8 +19,9 @@ window.onload = function() {
   gVideo = document.getElementById('tv');
   gChBanner = document.getElementById('channel-banner');
 
-  SensorMonitor.init();
-  WebCamView.init(SERVER_ADDRESS, 'webcam-view', 'tv-view');
+  var server = getServerAddress();
+  SensorMonitor.init(server);
+  WebCamView.init(server, 'webcam-view', 'tv-view');
   MoistureView.init('moisture-view', 'tv-view', getMoisturePercentage);
 
   SensorMonitor.setDetectionHandler('motion', function (value) {
@@ -113,7 +114,17 @@ function KeyDownFunc(event) {
   var key = event.keyCode;
   console.log('KeyDownFunc ' + key);
 
-  WebCamView.postKeyEvent(event);
+  if (WebCamView.isOpened()) {
+    WebCamView.postKeyEvent(event);
+    switch (key) {
+      case KeyEvent.DOM_VK_RED:
+      case KeyEvent.DOM_VK_R: // for debugging in simulator
+        WebCamView.close();
+        break;
+    }
+    event.preventDefault();
+    return;
+  }
 
   var gChannelList_index = -1;
  
@@ -180,10 +191,14 @@ function KeyDownFunc(event) {
     }
     break;
   case KeyEvent.DOM_VK_YELLOW:
-  case KeyEvent.DOM_VK_Y: // for debugging in simulator
-    gIsNotificationVisible = !gIsNotificationVisible;
-    setNotificationVisible();      
+  case KeyEvent.DOM_VK_Y: { // for debugging in simulator
+    var server = requestServerAddress();
+    console.log('New IP address: ' + server);
+    SensorMonitor.finish();
+    SensorMonitor.init(server);
+    WebCamView.init(server, 'webcam-view', 'tv-view');
     break;
+  }
   case KeyEvent.DOM_VK_LEFT:
     break;
   case KeyEvent.DOM_VK_RIGHT:
@@ -240,3 +255,35 @@ function getMoisturePercentage() {
   }
   return value * (100 / MAX_MOISTURE_VALUE);
 }
+
+function getServerAddress(msg) {
+  var address = window.localStorage.getItem(KEY_SERVER_ADDRESS);
+  if (address) {
+    return address;
+  }
+  return requestServerAddress();
+}
+
+function requestServerAddress(msg) {
+  var addr = prompt(msg || 'Input server IP address');
+  function isValidIP(addr) {
+    if (!addr || addr.length < '1.1.1.1'.length) {
+      return false;
+    }
+    var splitted = addr.split('.');
+    if (splitted.length != 4) {
+      return false;
+    }
+    var invalid = splitted.some(function (unit) {
+      var num = parseInt(unit);
+      return  (num.toString() != unit || num < 0 || num > 255);
+    });
+    return !invalid;
+  }
+  if (!isValidIP(addr)) {
+    return requestServerAddress('Input valid IPv4 address!');
+  }
+  window.localStorage.setItem(KEY_SERVER_ADDRESS, addr);
+  return addr;
+}
+
