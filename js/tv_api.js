@@ -193,6 +193,9 @@ function KeyDownFunc(event) {
   case KeyEvent.DOM_VK_YELLOW:
   case KeyEvent.DOM_VK_Y: { // for debugging in simulator
     var server = requestServerAddress();
+    if (!server) {
+      break;
+    }
     console.log('New IP address: ' + server);
     SensorMonitor.finish();
     SensorMonitor.init(server);
@@ -266,6 +269,9 @@ function getServerAddress(msg) {
 
 function requestServerAddress(msg) {
   var addr = prompt(msg || 'Input server IP address');
+  if (addr.length === 0) {
+    return null;
+  }
   function isValidIP(addr) {
     if (!addr || addr.length < '1.1.1.1'.length) {
       return false;
